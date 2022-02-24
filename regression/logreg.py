@@ -16,16 +16,16 @@ class BaseRegressor():
         # defining list for storing loss history
         self.loss_history_train = []
         self.loss_history_val = []
-        
+
     def calculate_gradient(self, X, y):
         pass
-    
+
     def loss_function(self, y_true, y_pred):
         pass
-    
+
     def make_prediction(self, X):
         pass
-    
+
     def train_model(self, X_train, y_train, X_val, y_val):
         # Padding data with vector of ones for bias term
         X_train = np.hstack([X_train, np.ones((X_train.shape[0], 1))])
@@ -59,7 +59,7 @@ class BaseRegressor():
                 # Calculating gradient of loss function with respect to each parameter
                 grad = self.calculate_gradient(X_train, y_train)
                 # Updating parameters
-                new_W = prev_W - self.lr * grad 
+                new_W = prev_W - self.lr * grad
                 self.W = new_W
                 # Saving step size
                 update_size_epoch.append(np.abs(new_W - prev_W))
@@ -70,7 +70,7 @@ class BaseRegressor():
             prev_update_size = np.mean(np.array(update_size_epoch))
             # Updating iteration number
             iteration += 1
-    
+
     def plot_loss_history(self):
         """
         Plots the loss history after training is complete.
@@ -88,31 +88,34 @@ class BaseRegressor():
         axs[0].set_ylabel('Train Loss')
         axs[1].set_ylabel('Val Loss')
         fig.tight_layout()
-        
+
 
 # import required modules
 class LogisticRegression(BaseRegressor):
     def __init__(self, num_feats, learning_rate=0.1, tol=0.0001, max_iter=100, batch_size=12):
         super().__init__(num_feats, learning_rate, tol, max_iter, batch_size)
-        
+
     def calculate_gradient(self, X, y) -> np.ndarray:
         """
         TODO: write function to calculate gradient of the
-        logistic loss function to update the weights 
+        logistic loss function to update the weights
 
         Params:
             X (np.ndarray): feature values
             y (np.array): labels corresponding to X
 
-        Returns: 
+        Returns:
             gradients for given loss function (np.ndarray)
         """
-        pass
-    
+        y_pred = self.make_prediction(X) #based on current weights, compute predicted labels
+        Xt = np.transpose(X)
+        gradient = np.dot(Xt,(y - y_pred)) / X.shape[0] #compute gradient
+        return -gradient
+
     def loss_function(self, X, y) -> float:
         """
-        TODO: get y_pred from input X and implement binary cross 
-        entropy loss function. Binary cross entropy loss assumes that 
+        TODO: get y_pred from input X and implement binary cross
+        entropy loss function. Binary cross entropy loss assumes that
         the classification is either 1 or 0, not continuous, making
         it more suited for (binary) classification.
 
@@ -120,26 +123,34 @@ class LogisticRegression(BaseRegressor):
             X (np.ndarray): feature values
             y (np.array): labels corresponding to X
 
-        Returns: 
-            average loss 
+        Returns:
+            average loss
         """
-        pass
-    
+        losses = 0
+        y_preds = self.make_prediction(X) #based on current weights, compute predicted labels
+
+        for obs,pred in zip(y,y_preds):
+            assert pred != 0 #check to make sure no predictions are mapped to zero
+            losses += ((obs*np.log(pred)) + ((1 - obs)*np.log(1 - pred))) #for all observations and predictions, sum the losses
+
+        average_loss = -1*losses / len(y) #compute average loss
+        return average_loss
+
     def make_prediction(self, X) -> np.array:
         """
         TODO: implement logistic function to get estimates (y_pred) for input
-        X values. The logistic function is a transformation of the linear model W.T(X)+b 
+        X values. The logistic function is a transformation of the linear model W.T(X)+b
         into an "S-shaped" curve that can be used for binary classification
 
-        Params: 
+        Params:
             X (np.ndarray): Set of feature values to make predictions for
 
-        Returns: 
+        Returns:
             y_pred for given X
         """
+        y_pred = self._sigmoid(np.dot(X,self.W))
+        return y_pred
 
-        pass
-
-
-
-    
+    @staticmethod
+    def _sigmoid(x):
+        return 1 / (1 + np.exp(-x))
