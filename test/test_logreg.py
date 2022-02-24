@@ -55,8 +55,7 @@ def test_predict():
 	old_grad = regressor.calculate_gradient(np.hstack([X_train, np.ones((X_train.shape[0], 1))]),y_train)
 	regressor.train_model(X_train, y_train, X_test, y_test)
 	new_w = regressor.W
-	for i in range(0,len(new_w)):
-		assert old_w[i] != new_w[i] #check that self.W is being updated as expected
+ 	assert set(old_w - new_w) != {0} #check that self.W is being updated
 
 	batch_size = 400
 	max_iter = 10000
