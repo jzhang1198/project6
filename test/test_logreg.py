@@ -52,7 +52,7 @@ def test_predict():
 	regressor = logreg.LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
 
 	old_w = regressor.W
-	old_grad = regressor.calculate_gradient(X_train,y_train)
+	old_grad = regressor.calculate_gradient(np.hstack([X_train, np.ones((X_train.shape[0], 1))]),y_train)
 	regressor.train_model(X_train, y_train, X_test, y_test)
 	new_w = regressor.W
 	assert new_w == old_w - regressor.lr * old_grad #check that self.W is being updated as expected
