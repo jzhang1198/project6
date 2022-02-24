@@ -130,7 +130,12 @@ class LogisticRegression(BaseRegressor):
         y_preds = self.make_prediction(X) #based on current weights, compute predicted labels
 
         for obs,pred in zip(y,y_preds):
-            assert pred != 0 #check to make sure no predictions are mapped to zero
+            if pred == 1: #make sure no predictions are mapped to zero or 1
+                pred = .99999
+
+            elif pred == 0:
+                pred = 0.00001
+                
             losses += ((obs*np.log(pred)) + ((1 - obs)*np.log(1 - pred))) #for all observations and predictions, sum the losses
 
         average_loss = -1*losses / len(y) #compute average loss

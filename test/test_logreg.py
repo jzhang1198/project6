@@ -25,12 +25,12 @@ def test_updates():
 	batch_size = 400
 	regressor = logreg.LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
 
-	old_loss = regressor.loss_function(X_train, y_train)
+	old_loss = regressor.loss_function(np.hstack([X_train, np.ones((X_train.shape[0], 1))]), y_train)
 	assert old_loss > 0 and old_loss < 100 #check that losses are reasonable and computed properly
 
-	grad = regressor.calculate_gradient(X_train, y_train)
+	grad = regressor.calculate_gradient(np.hstack([X_train, np.ones((X_train.shape[0], 1))]), y_train)
 	regressor.W = regressor.W - regressor.lr *  grad
-	new_loss = regressor.loss_function(X_train, y_train)
+	new_loss = regressor.loss_function(np.hstack([X_train, np.ones((X_train.shape[0], 1))]), y_train)
 	assert new_loss < old_loss #check that the gradient is computed properly
 
 	regressor.train_model(X_train, y_train, X_test, y_test)
