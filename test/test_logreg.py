@@ -64,7 +64,7 @@ def test_predict():
 
 	X,y = utils.loadDataset()
 	X = np.hstack([X,np.ones((X.shape[0],1))])
-	y_preds = np.around(regressor.predict(X),decimals=0)
+	y_preds = np.around(regressor.make_prediction(X),decimals=0)
 	assert set(y_preds) == {0,1} #check that predicted labels are 0 or 1
 
 	accuracy = len([i for i in (y_preds - y) if i == 0]) / len(y)
