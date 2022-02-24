@@ -47,17 +47,16 @@ def test_predict():
 	num_feats = X_train.shape[1] #define hyperparameters
 	learning_rate = 0.001
 	tol = 0.000001
-	max_iter = 1
-	batch_size = 1
+	max_iter = 2
+	batch_size = 2
 	regressor = logreg.LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
 
 	old_w = regressor.W
 	old_grad = regressor.calculate_gradient(np.hstack([X_train, np.ones((X_train.shape[0], 1))]),y_train)
 	regressor.train_model(X_train, y_train, X_test, y_test)
 	new_w = regressor.W
-	tolerance = 10e-6
 	for i in range(0,len(new_w)):
-		assert new_w[i] - (old_w[i] - regressor.lr * old_grad[i]) < tolerance #check that self.W is being updated as expected
+		assert old_w[i] != new_w[i] #check that self.W is being updated as expected
 
 	batch_size = 400
 	max_iter = 10000
