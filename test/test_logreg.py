@@ -59,7 +59,7 @@ def test_predict():
 
 	batch_size = 400
 	max_iter = 10000
-	regressor = LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
+	regressor = logreg.LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
 	regressor.train_model(X_train, y_train, X_test, y_test) #train model
 
 	X,y = utils.loadDataset()
