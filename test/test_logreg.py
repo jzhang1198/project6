@@ -56,7 +56,7 @@ def test_predict():
 	regressor.train_model(X_train, y_train, X_test, y_test)
 	new_w = regressor.W
  	assert set(old_w - new_w) != {0} #check that self.W is being updated
-
+	
 	batch_size = 400
 	max_iter = 10000
 	regressor = LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
