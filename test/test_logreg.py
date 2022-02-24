@@ -23,7 +23,7 @@ def test_updates():
 	tol = 0.000001
 	max_iter = 10000
 	batch_size = 400
-	regressor = LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
+	regressor = logreg.LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
 
 	old_loss = regressor.loss_function(X_train, y_train)
 	assert old_loss > 0 and old_loss < 100 #check that losses are reasonable and computed properly
@@ -49,7 +49,7 @@ def test_predict():
 	tol = 0.000001
 	max_iter = 1
 	batch_size = 1
-	regressor = LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
+	regressor = logreg.LogisticRegression(num_feats, learning_rate, tol, max_iter, batch_size) #instantiate a logistic regressor
 
 	old_w = regressor.W
 	old_grad = regressor.calculate_gradient(X_train,y_train)
